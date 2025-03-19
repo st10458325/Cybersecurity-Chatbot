@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NAudio.Wave;
 
 class ChatBot
 {
@@ -10,12 +11,12 @@ class ChatBot
             // Greetings
             {"hi", "Hi there! How can I assist you today?"},
             {"hello", "Hello! How can I help you with cybersecurity?"},
-            {"how are you", "I'm just a bot, but I'm always here to help!"},
+            {"What are you", "I'm just a bot, but I'm always here to help!"},
 
             // Cybersecurity Tips
-            {"password security", "Use a mix of uppercase, lowercase, numbers, and symbols. Avoid common words."},
-            {"strong password", "A strong password should be at least 12 characters long and avoid personal details."},
-            {"password manager", "Using a password manager helps you generate and store strong, unique passwords for every account."},
+            {"password", "Use a mix of uppercase, lowercase, numbers, and symbols. Avoid common words." +
+            "A strong password should be at least 12 characters long and avoid personal details. " +
+            "Using a password manager helps you generate and store strong, unique passwords for every account."},
 
             {"phishing", "Don't click on links from unknown sources. Always verify emails before responding."},
             {"email scam", "Be cautious of emails asking for personal information. Verify the sender before clicking links."},
@@ -34,9 +35,18 @@ class ChatBot
             {"cybersecurity", "Cybersecurity is about protecting systems, networks, and data from cyber threats."},
             {"hacking", "Hacking refers to unauthorized access to data or systems. Ethical hackers help improve security."},
 
+            // Additional Cybersecurity Topics
+            {"encryption", "Encryption converts data into a code to prevent unauthorized access. Use strong encryption methods."},
+            {"data breach", "A data breach is an incident where information is stolen or taken from a system without the knowledge or authorization of the system's owner."},
+            {"antivirus", "Antivirus software helps protect your computer from malware. Keep it updated regularly."},
+            {"backup", "Regularly back up your data to an external drive or cloud storage to prevent data loss."},
+            {"secure browsing", "Use secure browsers and enable privacy settings to protect your online activities."},
+            {"software updates", "Keep your software updated to protect against vulnerabilities and security threats."},
+            {"network security", "Implement strong network security measures like firewalls, intrusion detection systems, and secure Wi-Fi."},
+            {"identity theft", "Identity theft occurs when someone uses your personal information without permission. Protect your personal data."},
         };
 
-        
+        PlayNotificationSound();
         Console.WriteLine("Hello! Welcome to your personal Cybersecurity Chatbot.");
         Console.WriteLine("Type 'exit' anytime to leave.");
 
@@ -66,6 +76,27 @@ class ChatBot
             {
                 Console.WriteLine("I'm not sure about that. Try asking about password security, phishing, or two-factor authentication.");
             }
+        }
+    }
+
+    static void PlayNotificationSound()
+    {
+        try
+        {
+            using (WaveOutEvent waveOut = new WaveOutEvent())
+            using (AudioFileReader reader = new AudioFileReader("Recording.wav"))
+            {
+                waveOut.Init(reader);
+                waveOut.Play();
+                while (waveOut.PlaybackState == PlaybackState.Playing)
+                {
+                    // Wait for the sound to finish playing
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error playing sound: " + ex.Message);
         }
     }
 }

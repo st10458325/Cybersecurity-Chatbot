@@ -26,3 +26,4 @@ C:\Users\RC_Student_lab\Desktop\POE_part_1\obj\Debug\net8.0\refint\POE 1 edition
 C:\Users\RC_Student_lab\Desktop\POE_part_1\obj\Debug\net8.0\POE 1 edition.pdb
 C:\Users\RC_Student_lab\Desktop\POE_part_1\obj\Debug\net8.0\POE 1 edition.genruntimeconfig.cache
 C:\Users\RC_Student_lab\Desktop\POE_part_1\obj\Debug\net8.0\ref\POE 1 edition.dll
+C:\Users\RC_Student_lab\Desktop\POE_part_1\obj\Debug\net8.0\POE 1 edition.sourcelink.json
