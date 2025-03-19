@@ -34,10 +34,9 @@ class ChatBot
             {"cybersecurity", "Cybersecurity is about protecting systems, networks, and data from cyber threats."},
             {"hacking", "Hacking refers to unauthorized access to data or systems. Ethical hackers help improve security."},
 
-            
         };
 
-
+        
         Console.WriteLine("Hello! Welcome to your personal Cybersecurity Chatbot.");
         Console.WriteLine("Type 'exit' anytime to leave.");
 
