@@ -2,91 +2,144 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
+using System.IO;
+using System.Threading;
 
 class ChatBot
 {
-    static void Main(string[] args)
+    private Dictionary<string, List<string>> responses;
+    private string userName;
+
+    public ChatBot()
     {
-        Dictionary<string, string> responses = new Dictionary<string, string>
+        responses = new Dictionary<string, List<string>>
         {
-            // Greetings
-            {"hi", "Hi there! How can I assist you today?"},
-            {"hello", "Hello! How can I help you with cybersecurity?"},
-            {"what are you", "I'm just a bot, but I'm always here to help!"},
-
-            // Cybersecurity Tips
-            {"password", "Use a mix of uppercase, lowercase, numbers, and symbols. Avoid common words." +
-                        "A strong password should be at least 12 characters long and avoid personal details." +
-                        "Using a password manager helps you generate and store strong, unique passwords for every account."},
-            {"phishing", " Don't click on links from unknown sources. Always verify emails before responding."},
-            {"email scam", " Be cautious of emails asking for personal information. Verify the sender before clicking links."},
-            {"social engineering", " Cybercriminals manipulate people into revealing sensitive information. Always double-check unexpected requests."},
-
-            {"two-factor authentication", " Enable 2FA on all critical accounts for extra security."},
-            {"2fa", " Two-factor authentication adds an extra layer of security beyond just a password."},
-
-            {"malware", " Avoid downloading software from untrusted sources. Keep your antivirus updated."},
-            {"ransomware", " Ransomware encrypts your files and demands payment. Regularly back up your data to stay protected."},
-            {"firewall", "A firewall helps block unauthorized access to your system. Keep it enabled."},
-
-            {"wifi", "Avoid using public WiFi for sensitive transactions. Use a VPN for better security."},
-            {"vpn", "A VPN encrypts your internet connection, protecting your data from hackers on public networks."},
-
-            {"cybersecurity", "Cybersecurity is about protecting systems, networks, and data from cyber threats."},
-            {"hacking", "Hacking refers to unauthorized access to data or systems. Ethical hackers help improve security."},
+            {"hi", new List<string>{"Hi there! How can I assist you today?", "Hello! Need help with cybersecurity?"} },
+            {"hello", new List<string>{"Hello! How can I help you?", "Hi! How's your day?"} },
+            {"what are you", new List<string>{"I'm just a bot, but I'm here to help!", "I'm a cybersecurity chatbot!"} },
+            {"password", new List<string>{"Use a mix of uppercase, lowercase, numbers, and symbols.", "A strong password should be unique and hard to guess."} },
+            {"phishing", new List<string>{"Don't click on links from unknown sources.", "Phishing attacks often come from emails pretending to be legitimate."} },
+            {"email scam", new List<string>{"Be cautious of emails asking for personal info.", "Verify the sender before clicking links."} },
+            {"social engineering", new List<string>{"Cybercriminals manipulate people into revealing sensitive information.", "Always double-check unexpected requests."} },
+            {"two-factor authentication", new List<string>{"Enable 2FA for extra security.", "2FA makes it harder for hackers to access your accounts."} },
+            {"vpn", new List<string>{"A VPN encrypts your internet connection.", "Use a VPN on public Wi-Fi for added security."} },
+            {"malware", new List<string>{"Avoid downloading software from untrusted sources.", "Keep your antivirus updated."} },
+            {"firewall", new List<string>{"A firewall helps block unauthorized access.", "Enable your firewall for better protection."} },
+            {"encryption", new List<string>{"Encryption protects your data.", "Encrypted data is unreadable without the correct key."} },
+            {"ddos", new List<string>{"DDoS attacks flood systems with traffic.", "Mitigate DDoS attacks using rate-limiting and firewalls."} },
+            {"cybersecurity", new List<string>{"Cybersecurity protects data and systems.", "Always stay informed about security risks."} }
         };
+    }
 
-        DisplayAsciiArt();
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("\nWelcome to the Cybersecurity Awareness Bot!");
-        Console.ResetColor();
-        PlayNotificationSound();
-        Console.WriteLine("Type 'exit' anytime to leave.");
-
-        while (true)
+    public void Start()
+    {
+        try
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("\nAsk me anything about Cybersecurity: ");
+            DisplayAsciiArt();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\nWelcome to the Cybersecurity Awareness Bot!");
             Console.ResetColor();
-            string userInput = Console.ReadLine().ToLower();
+            PlayNotificationSound();
+            Console.Write("Enter your name: ");
+            userName = Console.ReadLine().Trim();
+            if (string.IsNullOrWhiteSpace(userName)) userName = "User";
+            Console.WriteLine("Type 'exit' anytime to leave.");
 
-            if (userInput == "exit")
+            while (true)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Goodbye! Stay safe online.");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write($"\n{userName}: ");
                 Console.ResetColor();
-                break;
-            }
+                string userInput = Console.ReadLine().Trim().ToLower();
 
+                if (string.IsNullOrWhiteSpace(userInput))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Bot: Please enter a valid question.");
+                    Console.ResetColor();
+                    continue;
+                }
+
+                if (userInput == "exit")
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Bot: Goodbye! Stay safe online.");
+                    Console.ResetColor();
+                    break;
+                }
+
+                LogUserQuery(userInput);
+                RespondToUser(userInput);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.ResetColor();
+        }
+    }
+
+    private void RespondToUser(string userInput)
+    {
+        try
+        {
             bool found = false;
-            foreach (var key in responses.Keys.OrderByDescending(k => k.Length)) 
+            foreach (var key in responses.Keys.OrderByDescending(k => k.Length))
             {
                 if (userInput.Contains(key))
                 {
-                    Console.WriteLine(responses[key]);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("Bot: ");
+                    DisplayTypingEffect(GetRandomResponse(key));
                     found = true;
                     break;
                 }
             }
 
-
             if (!found)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("I'm not sure about that. Try asking about password security, phishing, or two-factor authentication.");
+                Console.WriteLine("Bot: I'm not sure about that. Try asking about password security, phishing, or two-factor authentication.");
                 Console.ResetColor();
             }
         }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Bot: An error occurred while processing your request: " + ex.Message);
+            Console.ResetColor();
+        }
     }
 
-    public static void PlayNotificationSound()
+    private string GetRandomResponse(string key)
     {
-        SoundPlayer player = new SoundPlayer("Recording.wav");
-        player.Load();
-        player.Play();
+        try
+        {
+            Random rnd = new Random();
+            return responses[key][rnd.Next(responses[key].Count)];
+        }
+        catch
+        {
+            return "Sorry, something went wrong while fetching the response.";
+        }
     }
 
-    static void DisplayAsciiArt()
+    private void PlayNotificationSound()
+    {
+        try
+        {
+            SoundPlayer player = new SoundPlayer("Recording.wav");
+            player.Load();
+            player.Play();
+        }
+        catch
+        {
+            Console.WriteLine("(Sound effect unavailable.)");
+        }
+    }
+
+    private void DisplayAsciiArt()
     {
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine(@"
@@ -97,7 +150,39 @@ class ChatBot
                   \____\__, |_.__/ \___|\__\__, |\___|_|   
                        |___/               |___/           
                   Cybersecurity Awareness Bot
-                        ");
+        ");
         Console.ResetColor();
+    }
+
+    private void DisplayTypingEffect(string message)
+    {
+        foreach (char c in message)
+        {
+            Console.Write(c);
+            Thread.Sleep(30);
+        }
+        Console.WriteLine();
+    }
+
+    private void LogUserQuery(string query)
+    {
+        try
+        {
+            string logFile = "chat_log.txt";
+            using (StreamWriter writer = new StreamWriter(logFile, true))
+            {
+                writer.WriteLine("[{0}] {1}: {2}", DateTime.Now, userName, query);
+            }
+        }
+        catch
+        {
+            Console.WriteLine("(Failed to log the query.)");
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        ChatBot bot = new ChatBot();
+        bot.Start();
     }
 }
