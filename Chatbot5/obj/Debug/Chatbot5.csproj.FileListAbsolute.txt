@@ -1,0 +1,8 @@
+C:\Users\RC_Student_lab\source\repos\Chatbot5\obj\Debug\Chatbot5.csproj.AssemblyReference.cache
+C:\Users\RC_Student_lab\source\repos\Chatbot5\obj\Debug\Chatbot5.csproj.CoreCompileInputs.cache
+C:\Users\RC_Student_lab\source\repos\Chatbot5\bin\Debug\Recording.wav
+C:\Users\RC_Student_lab\source\repos\Chatbot5\bin\Debug\Chatbot5.exe.config
+C:\Users\RC_Student_lab\source\repos\Chatbot5\bin\Debug\Chatbot5.exe
+C:\Users\RC_Student_lab\source\repos\Chatbot5\bin\Debug\Chatbot5.pdb
+C:\Users\RC_Student_lab\source\repos\Chatbot5\obj\Debug\Chatbot5.exe
+C:\Users\RC_Student_lab\source\repos\Chatbot5\obj\Debug\Chatbot5.pdb
